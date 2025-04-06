@@ -1,6 +1,6 @@
 # Apress Source Code
 
-This repository accompanies [*Practical Microservices Architectural Patterns*](https://www.apress.com/9781484245002) by Binildas Christudas (Apress, 2019).
+This repository accompanies [*Practical Microservices Architectural Patterns*](https://www.apress.com/9781484245002) by Binildas Christudas & Tarun Telang (Apress, 2025).
 
 [comment]: #cover
 ![Cover image](9781484245002.jpg)
