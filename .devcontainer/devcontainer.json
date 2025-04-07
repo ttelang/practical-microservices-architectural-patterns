@@ -1,1 +1,48 @@
-{"image":"mcr.microsoft.com/devcontainers/universal:2"}
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+	"name": "Practical Microservices Architecture Patterns",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/java:1-17-bookworm",
+
+	"features": {
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "none",
+			"installMaven": "true",
+			"installGradle": "false"
+		},
+		"ghcr.io/itsmechlark/features/rabbitmq-server:1": {
+			"version": "latest",
+			"plugins": "rabbitmq_management"  // Enable management plugin
+		}
+	},
+
+	// Forward ports for RabbitMQ server and management interface
+	"forwardPorts": [
+		5672,   // AMQP protocol
+		15672   // Management UI
+	],
+
+	// Enable RabbitMQ management plugin and start the server
+	"postCreateCommand": "sudo rabbitmq-plugins enable rabbitmq_management && sudo service rabbitmq-server restart",
+
+	// Configure tool-specific properties.
+	// VS Code specific customizations
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // Installs Java Extension Pack which includes:
+                // - Language Support for Java
+                // - Debugger for Java
+                // - Test Runner for Java
+                // - Maven for Java
+                // - Project Manager for Java
+                // - Visual Studio IntelliCode
+                "vscjava.vscode-java-pack"
+            ]
+        }
+    }
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
