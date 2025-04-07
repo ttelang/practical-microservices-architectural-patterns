@@ -32,6 +32,7 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4jVersion}</version>
         </dependency>
+        <!-- Log4j2 Core Dependencies -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -42,9 +43,10 @@
             <artifactId>log4j-core</artifactId>
             <version>${log4j2Version}</version>
         </dependency>
+        <!-- Log4j2 SLF4J Binding -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${log4j2Version}</version>
         </dependency>
     </dependencies>
@@ -61,37 +63,6 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-
-            <!-- Exec Maven Plugin for Running Classes -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <!-- Profile for 'listen' -->
-                    <execution>
-                        <id>run-listen</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.acme.ch06.ex01.Receive</mainClass>
-                        </configuration>
-                    </execution>
-                    <!-- Profile for 'send' -->
-                    <execution>
-                        <id>run-send</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.acme.ch06.ex01.Send</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -104,6 +75,10 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <mainClass>com.acme.ch06.ex01.Receive</mainClass>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>run-listen</id>
@@ -111,9 +86,6 @@
                                 <goals>
                                     <goal>java</goal>
                                 </goals>
-                                <configuration>
-                                    <mainClass>com.acme.ch06.ex01.Receive</mainClass>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -129,6 +101,10 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <mainClass>com.acme.ch06.ex01.Send</mainClass>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>run-send</id>
@@ -136,9 +112,6 @@
                                 <goals>
                                     <goal>java</goal>
                                 </goals>
-                                <configuration>
-                                    <mainClass>com.acme.ch06.ex01.Send</mainClass>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
