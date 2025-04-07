@@ -2,6 +2,21 @@
 
 A Spring-based RabbitMQ example demonstrating topic exchange, asynchronous message handling, and Spring AMQP integration.
 
+## Table of Contents
+1. [Quick Start](#quick-start)
+2. [Prerequisites](#prerequisites)
+3. [Architecture](#architecture)
+4. [Key Concepts](#key-concepts)
+5. [Spring AMQP Configuration](#spring-amqp-configuration)
+6. [Building and Running](#building-and-running)
+7. [Implementation Details](#implementation-details)
+8. [Logging Configuration](#logging-configuration)
+9. [Security and Credentials](#security-and-credentials-management)
+10. [Troubleshooting](#troubleshooting)
+11. [Development Guidelines](#development-guidelines)
+12. [References](#references)
+13. [Version Information](#version-information)
+
 ## Quick Start
 ```bash
 # 1. Start RabbitMQ Server
@@ -115,6 +130,108 @@ mvn test -Psend
 - Message routing
 
 ## Key Concepts
+
+### 1. Message Exchange Architecture
+- **Exchange**
+  - Central routing component in RabbitMQ
+  - Receives messages from producers
+  - Routes messages to appropriate queues
+  - Types: Direct, Topic, Fanout, Headers
+```xml
+<rabbit:topic-exchange id="exchange" name="SAMPLE_EXCHANGE">
+    <rabbit:bindings>
+        <rabbit:binding queue="anonymousQueue" pattern="my.routingkey.*"/>
+    </rabbit:bindings>
+</rabbit:topic-exchange>
+```
+
+### 2. Routing and Binding
+- **Routing Keys**
+  - String identifier for message routing
+  - Used in topic exchanges for pattern matching
+  - Example: `my.routingkey.important`
+```java
+channel.basicPublish("SAMPLE_EXCHANGE", "my.routingkey.alert", null, message.getBytes());
+```
+
+- **Topic Patterns**
+  - `*` (star): Exactly one word
+  - `#` (hash): Zero or more words
+  - Examples:
+    - `*.critical.*`: Matches `system.critical.alert`
+    - `system.#`: Matches `system.network.error`
+
+- **Bindings**
+  - Links exchanges to queues
+  - Defines routing patterns
+  - Multiple bindings per queue possible
+```xml
+<rabbit:binding queue="anonymousQueue" pattern="my.routingkey.*"/>
+```
+
+### 3. Message Processing
+- **Listener Implementation**
+  - Asynchronous message processing
+  - Spring AMQP `MessageListener` interface
+  - Automatic message acknowledgment
+```java
+public class Listener implements MessageListener {
+    @Override
+    public void onMessage(Message message) {
+        String content = new String(message.getBody());
+        LOGGER.debug("Received: {}", content);
+    }
+}
+```
+
+- **Listener Container**
+  - Manages listener lifecycle
+  - Handles connection recovery
+  - Provides error handling
+```xml
+<rabbit:listener-container connection-factory="connectionFactory">
+    <rabbit:listener ref="listener" queues="anonymousQueue"/>
+</rabbit:listener-container>
+```
+
+### 4. Message Flow Example
+1. **Producer** sends message to exchange:
+```java
+template.convertAndSend("SAMPLE_EXCHANGE", "my.routingkey.alert", "High CPU usage");
+```
+
+2. **Exchange** evaluates routing key against bindings:
+```xml
+<rabbit:topic-exchange name="SAMPLE_EXCHANGE">
+    <rabbit:bindings>
+        <rabbit:binding queue="systemQueue" pattern="*.*.alert"/>
+        <rabbit:binding queue="criticalQueue" pattern="#.critical.#"/>
+    </rabbit:bindings>
+</rabbit:topic-exchange>
+```
+
+3. **Queue** receives matching messages
+
+4. **Listener** processes messages:
+```java
+@Override
+public void onMessage(Message message) {
+    // Process message asynchronously
+    processMessage(message);
+}
+```
+
+### 5. Exchange Types
+- **Topic Exchange**: Pattern-based routing
+- **Direct Exchange**: Exact routing key matching
+- **Fanout Exchange**: Broadcast to all queues
+- **Headers Exchange**: Attribute-based routing
+
+### 6. Message Reliability
+- **Publisher Confirms**
+- **Consumer Acknowledgments**
+- **Queue Durability**
+- **Message Persistence**
 
 ### 1. Topic Exchange Pattern
 - **Definition**: Messages are routed based on routing key patterns
@@ -382,3 +499,69 @@ Update `devcontainer.json`:
 ## References
 - [Spring AMQP API Documentation](https://docs.spring.io/spring-amqp/docs/current/api/)
 - [RabbitMQ Tutorial](https://www.rabbitmq.com/tutorials)
+
+## Version Information
+- Spring AMQP: 3.2.4
+- RabbitMQ Client: 5.25.0
+- Java: 17
+- Log4j2: 2.24.3
+- SLF4J: 2.0.17
+
+## Expected Output
+
+### Listener Start
+```log
+[INFO] Start
+[DEBUG] Context successfully created from: rabbit-listener-context.xml
+[DEBUG] Waiting for messages...
+```
+
+### Sender Execution
+
+```log
+[INFO] Start
+[DEBUG] Sent message with routing key 'my.routingkey.test'
+[INFO] End
+```
+
+## Common Error Resolution
+
+| Error | Possible Cause | Resolution |
+|-------|---------------|------------|
+| Connection refused | RabbitMQ not running | `sudo systemctl start rabbitmq-server` |
+| Authentication failed | Invalid credentials | Check username/password in configuration |
+| Exchange not found | Exchange not declared | Verify exchange declaration in XML |
+| Queue not bound | Missing binding | Check binding pattern in configuration |
+
+## Testing
+
+### Unit Tests
+```bash
+mvn test
+```
+
+### Integration Tests
+- Start RabbitMQ
+- Run listener
+- Send test messages
+- Verify in management console
+
+### Load Testing
+Using JMeter or similar tools for performance testing
+
+## Environment Setup
+
+### Local Development
+```bash
+# Clone repository
+git clone <repository-url>
+cd practical-microservices-architectural-patterns
+
+# Build project
+mvn clean install
+
+# Set up RabbitMQ
+sudo systemctl start rabbitmq-server
+sudo rabbitmqctl add_user test test
+sudo rabbitmqctl set_permissions -p / test ".*" ".*" ".*"
+```
