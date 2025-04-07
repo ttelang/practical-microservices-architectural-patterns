@@ -17,8 +17,6 @@ mvn test -Psend
 ## Prerequisites
 - Java 17
 - Maven
-- VS Code with Dev Containers extension
-- Docker
 
 ## Architecture
 ```mermaid
