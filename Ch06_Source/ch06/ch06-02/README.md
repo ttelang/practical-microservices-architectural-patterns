@@ -7,6 +7,12 @@ A Spring-based RabbitMQ example demonstrating topic exchange, asynchronous messa
 2. [Prerequisites](#prerequisites)
 3. [Architecture](#architecture)
 4. [Key Concepts](#key-concepts)
+   - [Message Exchange Architecture](#1-message-exchange-architecture)
+   - [Routing and Binding](#2-routing-and-binding)
+   - [Message Processing](#3-message-processing)
+   - [Message Flow](#4-message-flow-example)
+   - [Exchange Types](#5-exchange-types)
+   - [Message Reliability](#6-message-reliability)
 5. [Spring AMQP Configuration](#spring-amqp-configuration)
 6. [Building and Running](#building-and-running)
 7. [Implementation Details](#implementation-details)
@@ -14,8 +20,16 @@ A Spring-based RabbitMQ example demonstrating topic exchange, asynchronous messa
 9. [Security and Credentials](#security-and-credentials-management)
 10. [Troubleshooting](#troubleshooting)
 11. [Development Guidelines](#development-guidelines)
-12. [References](#references)
-13. [Version Information](#version-information)
+12. [Project Structure](#folder-structure)
+    - [Directory Layout](#folder-structure)
+    - [Source Code](#source-code)
+    - [Configuration Files](#configuration)
+    - [Build & Development](#build--development)
+13. [References](#references)
+14. [Version Information](#version-information)
+15. [Expected Output](#expected-output)
+16. [Testing](#testing)
+17. [Environment Setup](#environment-setup)
 
 ## Quick Start
 ```bash
@@ -565,3 +579,35 @@ sudo systemctl start rabbitmq-server
 sudo rabbitmqctl add_user test test
 sudo rabbitmqctl set_permissions -p / test ".*" ".*" ".*"
 ```
+
+## Folder Structure
+
+```
+Ch06_Source/ch06/ch06-02/
+├── .devcontainer/
+│   └── devcontainer.json          # Dev container configuration
+├── .vscode/
+│   └── launch.json                # VS Code launch configurations
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/acme/ch06/ex02/
+│       │       ├── Listener.java          # Message consumer
+│       │       ├── ListenerContainer.java # Spring context loader
+   - `Listener.java`: Implements message consumption logic
+   - `ListenerContainer.java`: Manages Spring context for listener
+   - `Sender.java`: Implements message sending logic
+
+2. **Configuration**
+   - `rabbit-listener-context.xml`: Topic exchange and listener setup
+   - `rabbit-sender-context.xml`: Sender configuration
+   - `log4j2.xml`: Logging configuration
+   - `rabbitmq.properties`: Connection properties
+
+3. **Build & Development**
+   - `pom.xml`: Project dependencies and build configuration
+   - `devcontainer.json`: Development container setup
+   - `launch.json`: VS Code debugging configurations
+
+4. **Documentation**
+   - `README.md`: Project documentation and usage guide
