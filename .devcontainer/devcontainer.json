@@ -11,20 +11,30 @@
 			"installMaven": "true",
 			"installGradle": "false"
 		},
+		"ghcr.io/devcontainers-extra/features/mongodb-atlas-cli-homebrew:1": {
+			"version": "latest"
+		},
 		"ghcr.io/itsmechlark/features/rabbitmq-server:1": {
 			"version": "latest",
 			"plugins": "rabbitmq_management"  // Enable management plugin
+		},
+		"ghcr.io/devcontainers/features/nginx:1": {
+			"version": "latest"
 		}
 	},
 
 	// Forward ports for RabbitMQ server and management interface
 	"forwardPorts": [
-		5672,   // AMQP protocol
-		15672   // Management UI
+		5672,   // Default AMQP protocol
+		15672,  // Default Management UI
+		5673,   // Second instance AMQP protocol
+		15673,  // Second instance Management UI
+		80,     // Nginx HTTP
+		443     // Nginx HTTPS
 	],
 
-	// Enable RabbitMQ management plugin and start the server
-	"postCreateCommand": "sudo rabbitmq-plugins enable rabbitmq_management && sudo service rabbitmq-server restart",
+	// Execute our setup script instead of inline commands
+	"postCreateCommand": "sudo service nginx start",
 
 	// Configure tool-specific properties.
 	// VS Code specific customizations
