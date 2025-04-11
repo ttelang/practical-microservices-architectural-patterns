@@ -17,9 +17,6 @@
 		"ghcr.io/itsmechlark/features/rabbitmq-server:1": {
 			"version": "latest",
 			"plugins": "rabbitmq_management"  // Enable management plugin
-		},
-		"ghcr.io/devcontainers/features/nginx:1": {
-			"version": "latest"
 		}
 	},
 
@@ -34,7 +31,7 @@
 	],
 
 	// Execute our setup script instead of inline commands
-	"postCreateCommand": "sudo service nginx start",
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y nginx && sudo service nginx start",
 
 	// Configure tool-specific properties.
 	// VS Code specific customizations
