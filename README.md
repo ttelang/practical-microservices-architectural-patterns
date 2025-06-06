@@ -1,9 +1,9 @@
 # Apress Source Code
 
-This repository accompanies [*Practical Microservices Architectural Patterns*](https://www.apress.com/9781484245002), 2nd Edition by Binildas Christudas & Tarun Telang (Apress, 2019).
+This repository accompanies [*Practical Microservices Architectural Patterns*](https://www.apress.com/9781484245002), 2nd Edition by Binildas Christudas & Tarun Telang (Apress, 2025).
 
 [comment]: #cover
-![Cover image](9781484245002.jpg)
+![Cover image]()
 
 Download the files as a zip using the green button, or clone the repository to your machine using Git.
 
